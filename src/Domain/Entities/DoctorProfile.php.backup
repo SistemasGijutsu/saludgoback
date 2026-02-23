@@ -6,26 +6,26 @@ class DoctorProfile
 {
     private ?int $id;
     private int $usuarioId;
-    private ?int $especialidadId = null;
-    private ?string $cedula = null;
-    private ?string $tarjetaProfesional = null;
-    private ?string $medioTransporte = null;
-    private ?int $anosExperiencia = null;
-    private ?float $tarifaConsulta = null;
-    private ?string $descripcion = null;
-    private ?string $fotoDocumentoIdentidad = null;
-    private ?string $fotoTarjetaProfesional = null;
-    private ?string $selfieConTarjeta = null;
-    private ?string $documentoAdicional1 = null;
-    private ?string $documentoAdicional2 = null;
-    private ?string $documentoAdicional3 = null;
+    private ?int $especialidadId;
+    private ?string $cedula;
+    private ?string $tarjetaProfesional;
+    private ?string $medioTransporte;
+    private ?int $anosExperiencia;
+    private ?float $tarifaConsulta;
+    private ?string $descripcion;
+    private ?string $fotoDocumentoIdentidad;
+    private ?string $fotoTarjetaProfesional;
+    private ?string $selfieConTarjeta;
+    private ?string $documentoAdicional1;
+    private ?string $documentoAdicional2;
+    private ?string $documentoAdicional3;
     private int $verificado;
     private string $estadoVerificacion; // 'pendiente' | 'en_revision' | 'aprobado' | 'rechazado'
-    private ?\DateTime $fechaVerificacion = null;
-    private ?string $notasVerificacion = null;
-    private ?int $verificadoPor = null;
+    private ?\DateTime $fechaVerificacion;
+    private ?string $notasVerificacion;
+    private ?int $verificadoPor;
     private int $aceptaTerminos;
-    private ?\DateTime $fechaAceptaTerminos = null;
+    private ?\DateTime $fechaAceptaTerminos;
 
     public function __construct(
         int $usuarioId,
@@ -44,16 +44,16 @@ class DoctorProfile
     public function getId(): ?int { return $this->id; }
     public function getUsuarioId(): int { return $this->usuarioId; }
     public function getEspecialidadId(): ?int { return $this->especialidadId; }
-    public function getCedula(): ?string { return $this->cedula; }
-    public function getTarjetaProfesional(): ?string { return $this->tarjetaProfesional; }
-    public function getMedioTransporte(): ?string { return $this->medioTransporte; }
-    public function getAnosExperiencia(): ?int { return $this->anosExperiencia; }
-    public function getTarifaConsulta(): ?float { return $this->tarifaConsulta; }
-    public function getDescripcion(): ?string { return $this->descripcion; }
+    public function getCedula(): ?string { return $this->cedula ?? null; }
+    public function getTarjetaProfesional(): ?string { return $this->tarjetaProfesional ?? null; }
+    public function getMedioTransporte(): ?string { return $this->medioTransporte ?? null; }
+    public function getAnosExperiencia(): ?int { return $this->anosExperiencia ?? null; }
+    public function getTarifaConsulta(): ?float { return $this->tarifaConsulta ?? null; }
+    public function getDescripcion(): ?string { return $this->descripcion ?? null; }
     public function getVerificado(): int { return $this->verificado; }
     public function getEstadoVerificacion(): string { return $this->estadoVerificacion; }
-    public function getFechaVerificacion(): ?\DateTime { return $this->fechaVerificacion; }
-    public function getNotasVerificacion(): ?string { return $this->notasVerificacion; }
+    public function getFechaVerificacion(): ?\DateTime { return $this->fechaVerificacion ?? null; }
+    public function getNotasVerificacion(): ?string { return $this->notasVerificacion ?? null; }
     public function getAceptaTerminos(): int { return $this->aceptaTerminos; }
 
     // Setters

@@ -80,7 +80,11 @@ class AuthController
                 $profile->setTarjetaProfesional($data['tarjeta_profesional']);
             }
             if (isset($data['medio_transporte'])) {
-                $profile->setMedioTransporte($data['medio_transporte']);
+                // Normalizar a minúsculas y validar
+                $medioTransporte = strtolower(trim($data['medio_transporte']));
+                if (in_array($medioTransporte, ['motocicleta', 'automovil', 'ninguno'])) {
+                    $profile->setMedioTransporte($medioTransporte);
+                }
             }
             if (isset($data['anos_experiencia'])) {
                 $profile->setAnosExperiencia(intval($data['anos_experiencia']));
