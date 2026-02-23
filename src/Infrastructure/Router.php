@@ -52,6 +52,20 @@ class Router
         // Remover index.php de la URI si está presente
         $requestUri = str_replace('/index.php', '', $requestUri);
 
+        // Obtener el script name para extraer el base path
+        $scriptName = $_SERVER['SCRIPT_NAME'];
+        $basePath = str_replace('/index.php', '', $scriptName);
+        
+        // Remover el base path de la request URI
+        if (!empty($basePath) && strpos($requestUri, $basePath) === 0) {
+            $requestUri = substr($requestUri, strlen($basePath));
+        }
+        
+        // Asegurar que siempre empiece con /
+        if (empty($requestUri) || $requestUri[0] !== '/') {
+            $requestUri = '/' . $requestUri;
+        }
+
         foreach ($this->routes as $route) {
             $pattern = $this->convertToRegex($route['path']);
             
