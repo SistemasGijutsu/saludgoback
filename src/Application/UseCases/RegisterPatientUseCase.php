@@ -36,11 +36,19 @@ class RegisterPatientUseCase
 
         // Crear usuario con todos los datos personales
         $user = new User(
-            nombre: $dto->nombre,
-            email: $dto->email,
-            password: password_hash($dto->password, PASSWORD_BCRYPT),
-            rol: 'paciente'
+            $dto->nombre,
+            $dto->email,
+            password_hash($dto->password, PASSWORD_BCRYPT),
+            'paciente'
         );
+        
+        // Agregar datos adicionales del paciente
+        if ($dto->telefono) $user->setTelefono($dto->telefono);
+        if ($dto->fechaNacimiento) $user->setFechaNacimiento($dto->fechaNacimiento);
+        if ($dto->edad) $user->setEdad($dto->edad);
+        if ($dto->genero) $user->setGenero($dto->genero);
+        if ($dto->ciudad) $user->setCiudad($dto->ciudad);
+        if ($dto->direccion) $user->setDireccion($dto->direccion);
 
         $savedUser = $this->userRepository->save($user);
 
@@ -55,13 +63,13 @@ class RegisterPatientUseCase
         $patientProfile = null;
         if ($hasPatientData) {
             $patientProfile = new PatientProfile(
-                usuarioId: $savedUser->getId(),
-                contactoEmergenciaNombre: $dto->contactoEmergenciaNombre,
-                contactoEmergenciaTelefono: $dto->contactoEmergenciaTelefono,
-                tipoSangre: $dto->tipoSangre,
-                alergias: $dto->alergias,
-                condicionesCronicas: $dto->condicionesCronicas,
-                notasMedicas: $dto->notasMedicas
+                $savedUser->getId(),
+                $dto->contactoEmergenciaNombre,
+                $dto->contactoEmergenciaTelefono,
+                $dto->tipoSangre,
+                $dto->alergias,
+                $dto->condicionesCronicas,
+                $dto->notasMedicas
             );
 
             $patientProfile = $this->patientRepository->save($patientProfile);

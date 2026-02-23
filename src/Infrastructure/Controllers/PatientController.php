@@ -43,30 +43,44 @@ class PatientController
             
             $result = $useCase->execute($dto);
 
+            // Generar token JWT
+            $jwt = new \Infrastructure\Auth\JWT();
+            $token = $jwt->encode([
+                'user_id' => $result['user']['id'],
+                'email' => $result['user']['email'],
+                'rol' => $result['user']['rol']
+            ]);
+
             http_response_code(201);
             echo json_encode([
                 'success' => true,
                 'message' => 'Paciente registrado exitosamente',
-                'data' => $result
+                'token' => $token,
+                'user' => $result['user']
             ]);
 
         } catch (\InvalidArgumentException $e) {
             http_response_code(400);
             echo json_encode([
                 'success' => false,
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
+                'error' => config('app.debug') ? $e->getTraceAsString() : null
             ]);
         } catch (\RuntimeException $e) {
             http_response_code(409);
             echo json_encode([
                 'success' => false,
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
+                'error' => config('app.debug') ? $e->getTraceAsString() : null
             ]);
         } catch (\Exception $e) {
             http_response_code(500);
             echo json_encode([
                 'success' => false,
-                'message' => 'Error al registrar paciente: ' . $e->getMessage()
+                'message' => 'Error al registrar paciente: ' . $e->getMessage(),
+                'error' => config('app.debug') ? $e->getTraceAsString() : null,
+                'file' => config('app.debug') ? $e->getFile() : null,
+                'line' => config('app.debug') ? $e->getLine() : null
             ]);
         }
     }
