@@ -27,30 +27,45 @@ class PatientController
     public function register(): void
     {
         try {
-            $data = json_decode(file_get_contents('php://input'), true);
+            // Leer datos de entrada
+            $rawInput = file_get_contents('php://input');
+            $data = json_decode($rawInput, true);
             
             if (!$data) {
                 http_response_code(400);
                 echo json_encode([
                     'success' => false,
-                    'message' => 'Datos inválidos'
+                    'message' => 'Datos inválidos o JSON mal formado'
                 ]);
                 return;
             }
 
+            // Crear DTO y ejecutar caso de uso
             $dto = new RegisterPatientDTO($data);
             $useCase = new RegisterPatientUseCase($this->userRepository, $this->patientRepository);
-            
             $result = $useCase->execute($dto);
 
             // Generar token JWT
-            $jwt = new \Infrastructure\Auth\JWT();
-            $token = $jwt->encode([
-                'user_id' => $result['user']['id'],
-                'email' => $result['user']['email'],
-                'rol' => $result['user']['rol']
-            ]);
+            try {
+                $jwt = new \Infrastructure\Auth\JWT();
+                $token = $jwt->encode([
+                    'user_id' => $result['user']['id'],
+                    'email' => $result['user']['email'],
+                    'rol' => $result['user']['rol']
+                ]);
+            } catch (\Exception $jwtError) {
+                // Si falla el JWT, al menos devolver el usuario sin token
+                http_response_code(201);
+                echo json_encode([
+                    'success' => true,
+                    'message' => 'Paciente registrado exitosamente (sin token)',
+                    'user' => $result['user'],
+                    'token_error' => 'No se pudo generar el token'
+                ]);
+                return;
+            }
 
+            // Respuesta exitosa con token
             http_response_code(201);
             echo json_encode([
                 'success' => true,
@@ -60,27 +75,28 @@ class PatientController
             ]);
 
         } catch (\InvalidArgumentException $e) {
+            // Errores de validación
             http_response_code(400);
             echo json_encode([
                 'success' => false,
-                'message' => $e->getMessage(),
-                'error' => config('app.debug') ? $e->getTraceAsString() : null
+                'message' => $e->getMessage()
             ]);
         } catch (\RuntimeException $e) {
+            // Email ya existe
             http_response_code(409);
             echo json_encode([
                 'success' => false,
-                'message' => $e->getMessage(),
-                'error' => config('app.debug') ? $e->getTraceAsString() : null
+                'message' => $e->getMessage()
             ]);
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
+            // Cualquier otro error
             http_response_code(500);
             echo json_encode([
                 'success' => false,
-                'message' => 'Error al registrar paciente: ' . $e->getMessage(),
-                'error' => config('app.debug') ? $e->getTraceAsString() : null,
-                'file' => config('app.debug') ? $e->getFile() : null,
-                'line' => config('app.debug') ? $e->getLine() : null
+                'message' => 'Error al registrar paciente',
+                'error' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine()
             ]);
         }
     }
