@@ -9,13 +9,13 @@ class User
     private string $email;
     private string $password;
     private string $rol; // 'paciente' | 'profesional'
-    private ?string $telefono = null;
-    private ?string $fechaNacimiento = null;
-    private ?int $edad = null;
-    private ?string $genero = null;
-    private ?string $ciudad = null;
-    private ?string $direccion = null;
-    private ?string $fotoPerfil = null;
+    private ?string $telefono;
+    private ?string $fechaNacimiento;
+    private ?int $edad;
+    private ?string $genero;
+    private ?string $ciudad;
+    private ?string $direccion;
+    private ?string $fotoPerfil;
     private string $estadoCuenta; // 'activo' | 'pendiente_verificacion' | 'suspendido'
     private int $activo;
     private ?\DateTime $fechaRegistro;
@@ -43,13 +43,13 @@ class User
     public function getEmail(): string { return $this->email; }
     public function getPassword(): string { return $this->password; }
     public function getRol(): string { return $this->rol; }
-    public function getTelefono(): ?string { return $this->telefono; }
-    public function getFechaNacimiento(): ?string { return $this->fechaNacimiento; }
-    public function getEdad(): ?int { return $this->edad; }
-    public function getGenero(): ?string { return $this->genero; }
-    public function getCiudad(): ?string { return $this->ciudad; }
-    public function getDireccion(): ?string { return $this->direccion; }
-    public function getFotoPerfil(): ?string { return $this->fotoPerfil; }
+    public function getTelefono(): ?string { return $this->telefono ?? null; }
+    public function getFechaNacimiento(): ?string { return $this->fechaNacimiento ?? null; }
+    public function getEdad(): ?int { return $this->edad ?? null; }
+    public function getGenero(): ?string { return $this->genero ?? null; }
+    public function getCiudad(): ?string { return $this->ciudad ?? null; }
+    public function getDireccion(): ?string { return $this->direccion ?? null; }
+    public function getFotoPerfil(): ?string { return $this->fotoPerfil ?? null; }
     public function getEstadoCuenta(): string { return $this->estadoCuenta; }
     public function getActivo(): int { return $this->activo; }
     public function getFechaRegistro(): ?\DateTime { return $this->fechaRegistro; }

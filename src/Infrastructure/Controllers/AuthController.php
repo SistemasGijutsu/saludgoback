@@ -48,8 +48,10 @@ class AuthController
 
             if (!isset($data['nombre']) || !isset($data['email']) || !isset($data['password'])) {
                 response(['error' => 'Datos incompletos'], 400);
+                return;
             }
 
+            // Registrar el usuario
             $result = $this->authService->register(
                 $data['nombre'],
                 $data['email'],
@@ -57,31 +59,53 @@ class AuthController
                 'profesional'
             );
 
-            // Si viene información del perfil, crearlo
+            // SIEMPRE crear el perfil del profesional, es obligatorio
+            $doctorRepo = new DoctorProfileRepository();
+            
+            $especialidadId = null;
             if (isset($data['especialidad_id'])) {
-                $doctorRepo = new DoctorProfileRepository();
-                $profile = new \Domain\Entities\DoctorProfile(
-                    $result['user']['id'], 
-                    $data['especialidad_id']
-                );
-                
-                if (isset($data['cedula'])) $profile->setCedula($data['cedula']);
-                if (isset($data['tarjeta_profesional'])) $profile->setTarjetaProfesional($data['tarjeta_profesional']);
-                if (isset($data['medio_transporte'])) $profile->setMedioTransporte($data['medio_transporte']);
-                if (isset($data['anos_experiencia'])) $profile->setAnosExperiencia($data['anos_experiencia']);
-                if (isset($data['tarifa_consulta'])) $profile->setTarifaConsulta($data['tarifa_consulta']);
-                if (isset($data['descripcion'])) $profile->setDescripcion($data['descripcion']);
-
-                $profile = $doctorRepo->save($profile);
-                $result['doctor_profile'] = $profile->toArray();
+                $especialidadId = intval($data['especialidad_id']);
             }
+            
+            $profile = new \Domain\Entities\DoctorProfile(
+                $result['user']['id'], 
+                $especialidadId
+            );
+            
+            // Agregar datos opcionales del perfil si vienen
+            if (isset($data['cedula'])) {
+                $profile->setCedula($data['cedula']);
+            }
+            if (isset($data['tarjeta_profesional'])) {
+                $profile->setTarjetaProfesional($data['tarjeta_profesional']);
+            }
+            if (isset($data['medio_transporte'])) {
+                $profile->setMedioTransporte($data['medio_transporte']);
+            }
+            if (isset($data['anos_experiencia'])) {
+                $profile->setAnosExperiencia(intval($data['anos_experiencia']));
+            }
+            if (isset($data['tarifa_consulta'])) {
+                $profile->setTarifaConsulta(floatval($data['tarifa_consulta']));
+            }
+            if (isset($data['descripcion'])) {
+                $profile->setDescripcion($data['descripcion']);
+            }
+
+            // Guardar el perfil
+            $profile = $doctorRepo->save($profile);
+            $result['doctor_profile'] = $profile->toArray();
 
             response($result, 201);
 
         } catch (\InvalidArgumentException $e) {
             response(['error' => $e->getMessage()], 400);
-        } catch (\Exception $e) {
-            response(['error' => 'Error al registrar profesional: ' . $e->getMessage()], 500);
+        } catch (\Throwable $e) {
+            response([
+                'error' => 'Error al registrar profesional: ' . $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine()
+            ], 500);
         }
     }
 
