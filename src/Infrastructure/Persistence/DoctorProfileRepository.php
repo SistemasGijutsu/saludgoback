@@ -18,8 +18,8 @@ class DoctorProfileRepository implements DoctorProfileRepositoryInterface
     public function save(DoctorProfile $profile): DoctorProfile
     {
         $sql = "INSERT INTO profesionales 
-                (usuario_id, especialidad_id, cedula, tarjeta_profesional, medio_transporte, años_experiencia, tarifa_consulta, descripcion, verificado, estado_verificacion, acepta_terminos, fecha_acepta_terminos) 
-                VALUES (:usuario_id, :especialidad_id, :cedula, :tarjeta_profesional, :medio_transporte, :años_experiencia, :tarifa_consulta, :descripcion, :verificado, :estado_verificacion, :acepta_terminos, :fecha_acepta_terminos)";
+                (usuario_id, especialidad_id, cedula, tarjeta_profesional, medio_transporte, `años_experiencia`, tarifa_consulta, descripcion, verificado, estado_verificacion, acepta_terminos, fecha_acepta_terminos) 
+                VALUES (:usuario_id, :especialidad_id, :cedula, :tarjeta_profesional, :medio_transporte, :anos_experiencia, :tarifa_consulta, :descripcion, :verificado, :estado_verificacion, :acepta_terminos, :fecha_acepta_terminos)";
         
         $stmt = $this->db->prepare($sql);
         $stmt->execute([
@@ -28,7 +28,7 @@ class DoctorProfileRepository implements DoctorProfileRepositoryInterface
             ':cedula' => $profile->getCedula() ?? '', // cedula es NOT NULL, usar string vacío si no viene
             ':tarjeta_profesional' => $profile->getTarjetaProfesional(),
             ':medio_transporte' => $profile->getMedioTransporte(),
-            ':años_experiencia' => $profile->getAnosExperiencia(),
+            ':anos_experiencia' => $profile->getAnosExperiencia(),
             ':tarifa_consulta' => $profile->getTarifaConsulta(),
             ':descripcion' => $profile->getDescripcion(),
             ':verificado' => $profile->getVerificado(),
@@ -72,7 +72,7 @@ class DoctorProfileRepository implements DoctorProfileRepositoryInterface
                 cedula = :cedula,
                 tarjeta_profesional = :tarjeta_profesional,
                 medio_transporte = :medio_transporte,
-                años_experiencia = :años_experiencia,
+                `años_experiencia` = :anos_experiencia,
                 tarifa_consulta = :tarifa_consulta,
                 descripcion = :descripcion,
                 verificado = :verificado,
