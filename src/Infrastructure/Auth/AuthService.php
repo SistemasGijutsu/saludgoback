@@ -38,6 +38,7 @@ class AuthService
         $token = $this->generateToken($user);
 
         return [
+            'message' => 'Usuario registrado exitosamente',
             'user' => $this->userToArray($user),
             'token' => $token
         ];
@@ -62,6 +63,7 @@ class AuthService
         $token = $this->generateToken($user);
 
         return [
+            'message' => 'Inicio de sesión exitoso',
             'user' => $this->userToArray($user),
             'token' => $token
         ];
