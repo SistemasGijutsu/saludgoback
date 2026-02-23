@@ -1,0 +1,239 @@
+{
+    "info": {
+        "name": "SaludGo API",
+        "description": "Colección de endpoints para la API de SaludGo",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "Auth",
+            "item": [
+                {
+                    "name": "Registrar Paciente",
+                    "request": {
+                        "method": "POST",
+                        "header": [{"key": "Content-Type", "value": "application/json"}],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"nombre\": \"Juan Pérez\",\n    \"email\": \"juan@test.com\",\n    \"password\": \"123456\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/register/patient",
+                            "host": ["{{base_url}}"],
+                            "path": ["register", "patient"]
+                        }
+                    }
+                },
+                {
+                    "name": "Registrar Médico",
+                    "request": {
+                        "method": "POST",
+                        "header": [{"key": "Content-Type", "value": "application/json"}],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"nombre\": \"Dra. María García\",\n    \"email\": \"maria@test.com\",\n    \"password\": \"123456\",\n    \"especialidad_id\": 1,\n    \"cedula\": \"123456789\",\n    \"tarjeta_profesional\": \"TP123\",\n    \"medio_transporte\": \"motocicleta\",\n    \"anos_experiencia\": 5,\n    \"tarifa_consulta\": 50000,\n    \"descripcion\": \"Médico general con experiencia\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/register/doctor",
+                            "host": ["{{base_url}}"],
+                            "path": ["register", "doctor"]
+                        }
+                    }
+                },
+                {
+                    "name": "Login",
+                    "request": {
+                        "method": "POST",
+                        "header": [{"key": "Content-Type", "value": "application/json"}],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"email\": \"juan@test.com\",\n    \"password\": \"123456\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/login",
+                            "host": ["{{base_url}}"],
+                            "path": ["login"]
+                        }
+                    }
+                },
+                {
+                    "name": "Mi Perfil",
+                    "request": {
+                        "method": "GET",
+                        "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+                        "url": {
+                            "raw": "{{base_url}}/me",
+                            "host": ["{{base_url}}"],
+                            "path": ["me"]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Especialidades",
+            "item": [
+                {
+                    "name": "Listar Especialidades",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{base_url}}/specialties",
+                            "host": ["{{base_url}}"],
+                            "path": ["specialties"]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Paciente",
+            "item": [
+                {
+                    "name": "Crear Solicitud",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {"key": "Authorization", "value": "Bearer {{token}}"},
+                            {"key": "Content-Type", "value": "application/json"}
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"especialidad_id\": 1,\n    \"descripcion\": \"Necesito consulta médica urgente\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/service-requests",
+                            "host": ["{{base_url}}"],
+                            "path": ["service-requests"]
+                        }
+                    }
+                },
+                {
+                    "name": "Mis Solicitudes",
+                    "request": {
+                        "method": "GET",
+                        "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+                        "url": {
+                            "raw": "{{base_url}}/service-requests/my",
+                            "host": ["{{base_url}}"],
+                            "path": ["service-requests", "my"]
+                        }
+                    }
+                },
+                {
+                    "name": "Ver Ofertas de Solicitud",
+                    "request": {
+                        "method": "GET",
+                        "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+                        "url": {
+                            "raw": "{{base_url}}/service-requests/1/offers",
+                            "host": ["{{base_url}}"],
+                            "path": ["service-requests", "1", "offers"]
+                        }
+                    }
+                },
+                {
+                    "name": "Aceptar Oferta",
+                    "request": {
+                        "method": "POST",
+                        "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+                        "url": {
+                            "raw": "{{base_url}}/offers/1/accept",
+                            "host": ["{{base_url}}"],
+                            "path": ["offers", "1", "accept"]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Médico",
+            "item": [
+                {
+                    "name": "Solicitudes Disponibles",
+                    "request": {
+                        "method": "GET",
+                        "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+                        "url": {
+                            "raw": "{{base_url}}/service-requests/available",
+                            "host": ["{{base_url}}"],
+                            "path": ["service-requests", "available"]
+                        }
+                    }
+                },
+                {
+                    "name": "Enviar Oferta",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {"key": "Authorization", "value": "Bearer {{token}}"},
+                            {"key": "Content-Type", "value": "application/json"}
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"price\": 50000,\n    \"message\": \"Puedo atenderte en 30 minutos\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/service-requests/1/offer",
+                            "host": ["{{base_url}}"],
+                            "path": ["service-requests", "1", "offer"]
+                        }
+                    }
+                },
+                {
+                    "name": "Mis Ofertas",
+                    "request": {
+                        "method": "GET",
+                        "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+                        "url": {
+                            "raw": "{{base_url}}/offers/my",
+                            "host": ["{{base_url}}"],
+                            "path": ["offers", "my"]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Servicios",
+            "item": [
+                {
+                    "name": "Mis Servicios",
+                    "request": {
+                        "method": "GET",
+                        "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+                        "url": {
+                            "raw": "{{base_url}}/services/my",
+                            "host": ["{{base_url}}"],
+                            "path": ["services", "my"]
+                        }
+                    }
+                },
+                {
+                    "name": "Completar Servicio",
+                    "request": {
+                        "method": "POST",
+                        "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+                        "url": {
+                            "raw": "{{base_url}}/services/1/complete",
+                            "host": ["{{base_url}}"],
+                            "path": ["services", "1", "complete"]
+                        }
+                    }
+                }
+            ]
+        }
+    ],
+    "variable": [
+        {
+            "key": "base_url",
+            "value": "http://localhost/saludgoft/saludgo-backend/public/api",
+            "type": "string"
+        },
+        {
+            "key": "token",
+            "value": "",
+            "type": "string"
+        }
+    ]
+}

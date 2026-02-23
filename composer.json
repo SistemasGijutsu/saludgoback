@@ -1,0 +1,25 @@
+{
+    "name": "saludgo-backend",
+    "description": "API REST Backend para SaludGo - Plataforma de servicios médicos",
+    "version": "1.0.0",
+    "type": "project",
+    "require": {
+        "php": ">=8.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Domain\\": "src/Domain/",
+            "Application\\": "src/Application/",
+            "Infrastructure\\": "src/Infrastructure/"
+        }
+    },
+    "authors": [
+        {
+            "name": "SaludGo Team"
+        }
+    ],
+    "config": {
+        "preferred-install": "dist",
+        "optimize-autoloader": true
+    }
+}
