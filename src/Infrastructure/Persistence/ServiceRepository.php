@@ -17,8 +17,8 @@ class ServiceRepository implements ServiceRepositoryInterface
 
     public function save(Service $service): Service
     {
-        $sql = "INSERT INTO servicios (service_request_id, doctor_id, paciente_id, final_price, started_at, status) 
-                VALUES (:service_request_id, :doctor_id, :paciente_id, :final_price, :started_at, :status)";
+        $sql = "INSERT INTO servicios (service_request_id, doctor_id, paciente_id, final_price, started_at, status, commission_percentage, app_commission, doctor_earning, payment_status) 
+                VALUES (:service_request_id, :doctor_id, :paciente_id, :final_price, :started_at, :status, :commission_percentage, :app_commission, :doctor_earning, :payment_status)";
         
         $stmt = $this->db->prepare($sql);
         $stmt->execute([
@@ -28,6 +28,10 @@ class ServiceRepository implements ServiceRepositoryInterface
             ':final_price' => $service->getFinalPrice(),
             ':started_at' => $service->getStartedAt()?->format('Y-m-d H:i:s'),
             ':status' => $service->getStatus(),
+            ':commission_percentage' => $service->getCommissionPercentage(),
+            ':app_commission' => $service->getAppCommission(),
+            ':doctor_earning' => $service->getDoctorEarning(),
+            ':payment_status' => $service->getPaymentStatus(),
         ]);
 
         $service->setId((int)$this->db->lastInsertId());
@@ -83,7 +87,7 @@ class ServiceRepository implements ServiceRepositoryInterface
     public function update(Service $service): bool
     {
         $sql = "UPDATE servicios 
-                SET status = :status, completed_at = :completed_at 
+                SET status = :status, completed_at = :completed_at, payment_status = :payment_status 
                 WHERE id = :id";
         
         $stmt = $this->db->prepare($sql);
@@ -91,6 +95,7 @@ class ServiceRepository implements ServiceRepositoryInterface
             ':id' => $service->getId(),
             ':status' => $service->getStatus(),
             ':completed_at' => $service->getCompletedAt()?->format('Y-m-d H:i:s'),
+            ':payment_status' => $service->getPaymentStatus(),
         ]);
     }
 
@@ -101,10 +106,15 @@ class ServiceRepository implements ServiceRepositoryInterface
             (int)$row['doctor_id'],
             (int)$row['paciente_id'],
             (float)$row['final_price'],
+            isset($row['commission_percentage']) ? (float)$row['commission_percentage'] : 12.00,
             (int)$row['id']
         );
 
         $service->setStatus($row['status']);
+        
+        if (isset($row['payment_status'])) {
+            $service->setPaymentStatus($row['payment_status']);
+        }
 
         return $service;
     }

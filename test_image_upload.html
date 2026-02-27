@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Upload - SaludGo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 4px;
+            background-color: #f8f9fa;
+        }
+        .success {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        .error {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        img {
+            max-width: 200px;
+            margin-top: 10px;
+            border-radius: 8px;
+            border: 2px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <h1>🏥 Test de Upload de Imágenes - SaludGo</h1>
+    
+    <h2>Registrar Profesional con Foto</h2>
+    <form id="registerForm">
+        <div class="form-group">
+            <label>Nombre:</label>
+            <input type="text" name="nombre" required value="Dr. Test Usuario">
+        </div>
+        
+        <div class="form-group">
+            <label>Email:</label>
+            <input type="email" name="email" required value="test@example.com">
+        </div>
+        
+        <div class="form-group">
+            <label>Contraseña:</label>
+            <input type="password" name="password" required value="123456">
+        </div>
+        
+        <div class="form-group">
+            <label>Especialidad ID:</label>
+            <input type="number" name="especialidad_id" value="1">
+        </div>
+        
+        <div class="form-group">
+            <label>Cédula:</label>
+            <input type="text" name="cedula" value="123456789">
+        </div>
+        
+        <div class="form-group">
+            <label>Tarjeta Profesional:</label>
+            <input type="text" name="tarjeta_profesional" value="987654321">
+        </div>
+        
+        <div class="form-group">
+            <label>Foto de Perfil:</label>
+            <input type="file" name="foto_perfil" accept="image/*" required>
+        </div>
+        
+        <button type="submit">Registrar Profesional</button>
+    </form>
+
+    <div id="result" class="result" style="display: none;"></div>
+
+    <script>
+        const API_URL = 'http://localhost:8000/api';
+        
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const resultDiv = document.getElementById('result');
+            
+            resultDiv.style.display = 'block';
+            resultDiv.className = 'result';
+            resultDiv.innerHTML = '⏳ Subiendo imagen y registrando usuario...';
+            
+            try {
+                const response = await fetch(`${API_URL}/register/doctor`, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    resultDiv.className = 'result success';
+                    let html = '<h3>✅ Registro Exitoso!</h3>';
+                    html += `<p><strong>ID:</strong> ${data.user.id}</p>`;
+                    html += `<p><strong>Nombre:</strong> ${data.user.nombre}</p>`;
+                    html += `<p><strong>Email:</strong> ${data.user.email}</p>`;
+                    
+                    if (data.user.foto_perfil) {
+                        html += `<p><strong>Foto guardada:</strong> ${data.user.foto_perfil}</p>`;
+                        html += `<img src="${API_URL.replace('/api', '')}/${data.user.foto_perfil}" alt="Foto de perfil">`;
+                    } else {
+                        html += `<p><strong>⚠️ Advertencia:</strong> No se guardó la foto de perfil</p>`;
+                    }
+                    
+                    html += `<hr><pre>${JSON.stringify(data, null, 2)}</pre>`;
+                    resultDiv.innerHTML = html;
+                } else {
+                    resultDiv.className = 'result error';
+                    resultDiv.innerHTML = `<h3>❌ Error</h3><p>${data.error || 'Error desconocido'}</p><pre>${JSON.stringify(data, null, 2)}</pre>`;
+                }
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.innerHTML = `<h3>❌ Error de Conexión</h3><p>${error.message}</p>`;
+            }
+        });
+    </script>
+</body>
+</html>

@@ -11,11 +11,16 @@ class ServiceRequest
     private string $status; // 'OPEN' | 'TAKEN' | 'COMPLETED' | 'CANCELLED'
     private ?\DateTime $createdAt;
     private ?int $acceptedOfferId; // La oferta que fue aceptada
+    private ?float $distanceKm;
+    private ?float $latPatient;
+    private ?float $lngPatient;
 
     public function __construct(
         int $pacienteId,
         int $especialidadId,
         string $descripcion,
+        ?float $latPatient = null,
+        ?float $lngPatient = null,
         ?int $id = null
     ) {
         $this->id = $id;
@@ -24,6 +29,9 @@ class ServiceRequest
         $this->descripcion = $descripcion;
         $this->status = 'OPEN';
         $this->createdAt = new \DateTime();
+        $this->latPatient = $latPatient;
+        $this->lngPatient = $lngPatient;
+        $this->distanceKm = null;
     }
 
     // Getters
@@ -34,11 +42,15 @@ class ServiceRequest
     public function getStatus(): string { return $this->status; }
     public function getCreatedAt(): ?\DateTime { return $this->createdAt; }
     public function getAcceptedOfferId(): ?int { return $this->acceptedOfferId ?? null; }
+    public function getDistanceKm(): ?float { return $this->distanceKm; }
+    public function getLatPatient(): ?float { return $this->latPatient; }
+    public function getLngPatient(): ?float { return $this->lngPatient; }
 
     // Setters
     public function setId(int $id): void { $this->id = $id; }
     public function setStatus(string $status): void { $this->status = $status; }
     public function setAcceptedOfferId(?int $offerId): void { $this->acceptedOfferId = $offerId; }
+    public function setDistanceKm(?float $distanceKm): void { $this->distanceKm = $distanceKm; }
 
     // Métodos de negocio
     public function isOpen(): bool {
@@ -84,6 +96,9 @@ class ServiceRequest
             'status' => $this->status,
             'created_at' => $this->createdAt?->format('Y-m-d H:i:s'),
             'accepted_offer_id' => $this->acceptedOfferId,
+            'distance_km' => $this->distanceKm,
+            'lat_patient' => $this->latPatient,
+            'lng_patient' => $this->lngPatient,
         ];
     }
 }

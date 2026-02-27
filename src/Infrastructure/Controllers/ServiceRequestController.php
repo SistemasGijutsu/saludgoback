@@ -30,7 +30,9 @@ class ServiceRequestController
             $dto = new CreateServiceRequestDTO(
                 $userData['user_id'],
                 (int)$data['especialidad_id'],
-                $data['descripcion']
+                $data['descripcion'],
+                isset($data['lat_patient']) ? (float)$data['lat_patient'] : null,
+                isset($data['lng_patient']) ? (float)$data['lng_patient'] : null
             );
 
             $result = $useCase->execute($dto);

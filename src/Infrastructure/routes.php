@@ -49,6 +49,12 @@ $router->get('/me', function($userData) {
     $controller->me($userData);
 }, true);
 
+// Actualizar foto de perfil
+$router->post('/me/photo', function($userData) {
+    $controller = new AuthController();
+    $controller->updateProfilePhoto($userData);
+}, true);
+
 // ========================================
 // RUTAS DE PACIENTE
 // ========================================

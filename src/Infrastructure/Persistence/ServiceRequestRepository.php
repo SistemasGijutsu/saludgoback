@@ -17,8 +17,8 @@ class ServiceRequestRepository implements ServiceRequestRepositoryInterface
 
     public function save(ServiceRequest $request): ServiceRequest
     {
-        $sql = "INSERT INTO solicitudes_servicio (paciente_id, especialidad_id, descripcion, status, created_at) 
-                VALUES (:paciente_id, :especialidad_id, :descripcion, :status, :created_at)";
+        $sql = "INSERT INTO solicitudes_servicio (paciente_id, especialidad_id, descripcion, status, created_at, lat_patient, lng_patient, distance_km) 
+                VALUES (:paciente_id, :especialidad_id, :descripcion, :status, :created_at, :lat_patient, :lng_patient, :distance_km)";
         
         $stmt = $this->db->prepare($sql);
         $stmt->execute([
@@ -27,6 +27,9 @@ class ServiceRequestRepository implements ServiceRequestRepositoryInterface
             ':descripcion' => $request->getDescripcion(),
             ':status' => $request->getStatus(),
             ':created_at' => $request->getCreatedAt()?->format('Y-m-d H:i:s'),
+            ':lat_patient' => $request->getLatPatient(),
+            ':lng_patient' => $request->getLngPatient(),
+            ':distance_km' => $request->getDistanceKm(),
         ]);
 
         $request->setId((int)$this->db->lastInsertId());
@@ -101,6 +104,8 @@ class ServiceRequestRepository implements ServiceRequestRepositoryInterface
             (int)$row['paciente_id'],
             (int)$row['especialidad_id'],
             $row['descripcion'],
+            isset($row['lat_patient']) ? (float)$row['lat_patient'] : null,
+            isset($row['lng_patient']) ? (float)$row['lng_patient'] : null,
             (int)$row['id']
         );
 
@@ -108,6 +113,10 @@ class ServiceRequestRepository implements ServiceRequestRepositoryInterface
         
         if (isset($row['accepted_offer_id']) && $row['accepted_offer_id']) {
             $request->setAcceptedOfferId((int)$row['accepted_offer_id']);
+        }
+        
+        if (isset($row['distance_km']) && $row['distance_km']) {
+            $request->setDistanceKm((float)$row['distance_km']);
         }
 
         return $request;

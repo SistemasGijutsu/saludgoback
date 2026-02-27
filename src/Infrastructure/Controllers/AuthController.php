@@ -19,17 +19,34 @@ class AuthController
     public function registerPatient(): void
     {
         try {
-            $data = jsonInput();
+            // Soportar tanto JSON como multipart/form-data
+            $contentType = $_SERVER['CONTENT_TYPE'] ?? '';
+            if (strpos($contentType, 'multipart/form-data') !== false) {
+                $data = $_POST;
+            } else {
+                $data = jsonInput();
+            }
 
             if (!isset($data['nombre']) || !isset($data['email']) || !isset($data['password'])) {
                 response(['error' => 'Datos incompletos'], 400);
+            }
+
+            // Manejar foto de perfil si viene
+            $fotoPerfil = null;
+            if (isset($_FILES['foto_perfil']) && $_FILES['foto_perfil']['error'] === UPLOAD_ERR_OK) {
+                try {
+                    $fotoPerfil = uploadImage($_FILES['foto_perfil'], 'profiles');
+                } catch (\Exception $e) {
+                    response(['error' => 'Error al subir imagen: ' . $e->getMessage()], 400);
+                }
             }
 
             $result = $this->authService->register(
                 $data['nombre'],
                 $data['email'],
                 $data['password'],
-                'paciente'
+                'paciente',
+                $fotoPerfil
             );
 
             response($result, 201);
@@ -44,11 +61,28 @@ class AuthController
     public function registerDoctor(): void
     {
         try {
-            $data = jsonInput();
+            // Soportar tanto JSON como multipart/form-data
+            $contentType = $_SERVER['CONTENT_TYPE'] ?? '';
+            if (strpos($contentType, 'multipart/form-data') !== false) {
+                $data = $_POST;
+            } else {
+                $data = jsonInput();
+            }
 
             if (!isset($data['nombre']) || !isset($data['email']) || !isset($data['password'])) {
                 response(['error' => 'Datos incompletos'], 400);
                 return;
+            }
+
+            // Manejar foto de perfil si viene
+            $fotoPerfil = null;
+            if (isset($_FILES['foto_perfil']) && $_FILES['foto_perfil']['error'] === UPLOAD_ERR_OK) {
+                try {
+                    $fotoPerfil = uploadImage($_FILES['foto_perfil'], 'profiles');
+                } catch (\Exception $e) {
+                    response(['error' => 'Error al subir imagen: ' . $e->getMessage()], 400);
+                    return;
+                }
             }
 
             // Registrar el usuario
@@ -56,7 +90,8 @@ class AuthController
                 $data['nombre'],
                 $data['email'],
                 $data['password'],
-                'profesional'
+                'profesional',
+                $fotoPerfil
             );
 
             // SIEMPRE crear el perfil del profesional, es obligatorio
@@ -146,6 +181,11 @@ class AuthController
             $result = $user->toArray();
             unset($result['password']);
 
+            // Agregar URL completa de la foto de perfil
+            if ($result['foto_perfil']) {
+                $result['foto_perfil_url'] = getImageUrl($result['foto_perfil']);
+            }
+
             // Si es doctor, traer su perfil
             if ($user->isProfesional()) {
                 $doctorRepo = new DoctorProfileRepository();
@@ -159,6 +199,48 @@ class AuthController
 
         } catch (\Exception $e) {
             response(['error' => 'Error al obtener información del usuario'], 500);
+        }
+    }
+
+    public function updateProfilePhoto(array $userData): void
+    {
+        try {
+            if (!isset($_FILES['foto_perfil']) || $_FILES['foto_perfil']['error'] !== UPLOAD_ERR_OK) {
+                response(['error' => 'No se recibió ninguna imagen'], 400);
+            }
+
+            $userRepo = new UserRepository();
+            $user = $userRepo->findById($userData['user_id']);
+
+            if (!$user) {
+                response(['error' => 'Usuario no encontrado'], 404);
+            }
+
+            // Eliminar foto anterior si existe
+            $oldPhoto = $user->getFotoPerfil();
+            if ($oldPhoto) {
+                deleteImage($oldPhoto);
+            }
+
+            // Subir nueva foto
+            try {
+                $fotoPerfil = uploadImage($_FILES['foto_perfil'], 'profiles');
+                $user->setFotoPerfil($fotoPerfil);
+                $userRepo->update($user);
+
+                response([
+                    'success' => true,
+                    'message' => 'Foto de perfil actualizada',
+                    'foto_perfil' => $fotoPerfil,
+                    'foto_url' => getImageUrl($fotoPerfil)
+                ], 200);
+
+            } catch (\Exception $e) {
+                response(['error' => 'Error al subir imagen: ' . $e->getMessage()], 400);
+            }
+
+        } catch (\Exception $e) {
+            response(['error' => 'Error al actualizar foto de perfil'], 500);
         }
     }
 }

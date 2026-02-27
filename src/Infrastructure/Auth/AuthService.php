@@ -16,7 +16,7 @@ class AuthService
         $this->jwt = new JWT();
     }
 
-    public function register(string $nombre, string $email, string $password, string $rol = 'paciente'): array
+    public function register(string $nombre, string $email, string $password, string $rol = 'paciente', ?string $fotoPerfil = null): array
     {
         // Verificar si el email ya existe
         $existingUser = $this->userRepository->findByEmail($email);
@@ -32,6 +32,12 @@ class AuthService
         // Crear usuario
         $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
         $user = new User($nombre, $email, $hashedPassword, $rol);
+        
+        // Agregar foto de perfil si existe
+        if ($fotoPerfil) {
+            $user->setFotoPerfil($fotoPerfil);
+        }
+        
         $user = $this->userRepository->save($user);
 
         // Generar token

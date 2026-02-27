@@ -46,7 +46,9 @@ class CreateServiceRequestUseCase
         $request = new ServiceRequest(
             $dto->pacienteId,
             $dto->especialidadId,
-            $dto->descripcion
+            $dto->descripcion,
+            $dto->latPatient,
+            $dto->lngPatient
         );
 
         $request = $this->requestRepository->save($request);
