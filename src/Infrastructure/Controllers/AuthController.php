@@ -262,10 +262,10 @@ class AuthController
                 $user->setNombre($data['nombre']);
             }
             if (isset($data['email'])) {
-                // Validar que el email no esté en uso por otro usuario
+                // Validar que el email no estï¿½ en uso por otro usuario
                 $existingUser = $userRepo->findByEmail($data['email']);
                 if ($existingUser && $existingUser->getId() !== $user->getId()) {
-                    response(['error' => 'El email ya está en uso'], 400);
+                    response(['error' => 'El email ya estï¿½ en uso'], 400);
                     return;
                 }
                 $user->setEmail($data['email']);
