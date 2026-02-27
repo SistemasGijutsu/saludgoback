@@ -5,6 +5,7 @@ return [
     'env' => 'development',
     'debug' => true,
     'timezone' => 'America/Bogota',
+    'url' => 'http://localhost:8080/saludgoft/saludgo-backend',
     
     'jwt' => [
         'secret' => 'tu_clave_secreta_super_segura_cambiala_en_produccion',

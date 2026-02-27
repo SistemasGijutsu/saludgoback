@@ -55,6 +55,12 @@ class DoctorProfile
     public function getFechaVerificacion(): ?\DateTime { return $this->fechaVerificacion; }
     public function getNotasVerificacion(): ?string { return $this->notasVerificacion; }
     public function getAceptaTerminos(): int { return $this->aceptaTerminos; }
+    public function getFotoDocumentoIdentidad(): ?string { return $this->fotoDocumentoIdentidad; }
+    public function getFotoTarjetaProfesional(): ?string { return $this->fotoTarjetaProfesional; }
+    public function getSelfieConTarjeta(): ?string { return $this->selfieConTarjeta; }
+    public function getDocumentoAdicional1(): ?string { return $this->documentoAdicional1; }
+    public function getDocumentoAdicional2(): ?string { return $this->documentoAdicional2; }
+    public function getDocumentoAdicional3(): ?string { return $this->documentoAdicional3; }
 
     // Setters
     public function setId(int $id): void { $this->id = $id; }
@@ -68,6 +74,9 @@ class DoctorProfile
     public function setFotoDocumentoIdentidad(?string $foto): void { $this->fotoDocumentoIdentidad = $foto; }
     public function setFotoTarjetaProfesional(?string $foto): void { $this->fotoTarjetaProfesional = $foto; }
     public function setSelfieConTarjeta(?string $foto): void { $this->selfieConTarjeta = $foto; }
+    public function setDocumentoAdicional1(?string $doc): void { $this->documentoAdicional1 = $doc; }
+    public function setDocumentoAdicional2(?string $doc): void { $this->documentoAdicional2 = $doc; }
+    public function setDocumentoAdicional3(?string $doc): void { $this->documentoAdicional3 = $doc; }
     public function setVerificado(int $verificado): void { $this->verificado = $verificado; }
     public function setEstadoVerificacion(string $estado): void { $this->estadoVerificacion = $estado; }
     public function setFechaVerificacion(?\DateTime $fecha): void { $this->fechaVerificacion = $fecha; }
@@ -108,6 +117,12 @@ class DoctorProfile
             'anos_experiencia' => $this->anosExperiencia,
             'tarifa_consulta' => $this->tarifaConsulta,
             'descripcion' => $this->descripcion,
+            'foto_documento_identidad' => $this->fotoDocumentoIdentidad,
+            'foto_tarjeta_profesional' => $this->fotoTarjetaProfesional,
+            'selfie_con_tarjeta' => $this->selfieConTarjeta,
+            'documento_adicional_1' => $this->documentoAdicional1,
+            'documento_adicional_2' => $this->documentoAdicional2,
+            'documento_adicional_3' => $this->documentoAdicional3,
             'verificado' => $this->verificado,
             'estado_verificacion' => $this->estadoVerificacion,
             'fecha_verificacion' => $this->fechaVerificacion?->format('Y-m-d H:i:s'),

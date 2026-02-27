@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Debug - Upload SaludGo</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .header h1 { font-size: 28px; margin-bottom: 10px; }
+        .header p { opacity: 0.9; }
+        .content {
+            padding: 30px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        input[type="file"] {
+            padding: 10px;
+            cursor: pointer;
+        }
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 14px 30px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            width: 100%;
+            transition: transform 0.2s;
+        }
+        button:hover {
+            transform: translateY(-2px);
+        }
+        button:active {
+            transform: translateY(0);
+        }
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 8px;
+            display: none;
+        }
+        .success {
+            background-color: #d4edda;
+            border: 2px solid #28a745;
+            color: #155724;
+        }
+        .error {
+            background-color: #f8d7da;
+            border: 2px solid #dc3545;
+            color: #721c24;
+        }
+        .info {
+            background-color: #d1ecf1;
+            border: 2px solid #17a2b8;
+            color: #0c5460;
+        }
+        .debug-info {
+            background: #f8f9fa;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            overflow-x: auto;
+        }
+        .debug-info h4 {
+            margin-bottom: 10px;
+            color: #495057;
+        }
+        img {
+            max-width: 300px;
+            margin-top: 15px;
+            border-radius: 8px;
+            border: 3px solid #667eea;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        pre {
+            background: #282c34;
+            color: #abb2bf;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin-top: 10px;
+        }
+        .warning {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            color: #856404;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .warning strong {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔍 Debug Upload - SaludGo</h1>
+            <p>Diagnóstico completo de subida de imágenes</p>
+        </div>
+        
+        <div class="content">
+            <div class="warning">
+                <strong>⚠️ Modo Debug Activado</strong>
+                Este formulario muestra información detallada sobre el proceso de subida de archivos.
+            </div>
+
+            <form id="registerForm" enctype="multipart/form-data">
+                <div class="grid">
+                    <div class="form-group">
+                        <label>📝 Nombre Completo:</label>
+                        <input type="text" name="nombre" required value="Dr. Test Debug">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>📧 Email:</label>
+                        <input type="email" name="email" required>
+                    </div>
+                </div>
+
+                <div class="grid">
+                    <div class="form-group">
+                        <label>🔒 Contraseña:</label>
+                        <input type="password" name="password" required value="123456">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>🏥 Especialidad ID:</label>
+                        <input type="number" name="especialidad_id" value="1">
+                    </div>
+                </div>
+
+                <div class="grid">
+                    <div class="form-group">
+                        <label>🆔 Cédula:</label>
+                        <input type="text" name="cedula" value="123456789">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>📋 Tarjeta Profesional:</label>
+                        <input type="text" name="tarjeta_profesional" value="987654321">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>📸 Foto de Perfil: <span style="color: red;">*REQUERIDO*</span></label>
+                    <input type="file" name="foto_perfil" accept="image/*" required id="fileInput">
+                    <small style="color: #666; display: block; margin-top: 5px;">
+                        Formatos: JPG, PNG, WEBP | Máximo: 5MB
+                    </small>
+                </div>
+                
+                <div id="fileInfo" class="info" style="display: none; margin-bottom: 20px;"></div>
+                
+                <button type="submit">✨ Registrar y Diagnosticar</button>
+            </form>
+
+            <div id="result" class="result"></div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:8080/saludgoft/saludgo-backend/public/api';
+        
+        // Generar email único
+        document.querySelector('input[name="email"]').value = 'test' + Date.now() + '@example.com';
+        
+        // Mostrar info del archivo seleccionado
+        document.getElementById('fileInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            const fileInfo = document.getElementById('fileInfo');
+            
+            if (file) {
+                fileInfo.style.display = 'block';
+                fileInfo.innerHTML = `
+                    <strong>📁 Archivo seleccionado:</strong><br>
+                    <strong>Nombre:</strong> ${file.name}<br>
+                    <strong>Tipo:</strong> ${file.type}<br>
+                    <strong>Tamaño:</strong> ${(file.size / 1024 / 1024).toFixed(2)} MB<br>
+                    <strong>Última modificación:</strong> ${new Date(file.lastModified).toLocaleString()}
+                `;
+            } else {
+                fileInfo.style.display = 'none';
+            }
+        });
+        
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const resultDiv = document.getElementById('result');
+            const file = document.getElementById('fileInput').files[0];
+            
+            resultDiv.style.display = 'block';
+            resultDiv.className = 'result info';
+            resultDiv.innerHTML = '⏳ Subiendo imagen y registrando usuario...<br><small>Por favor espere...</small>';
+            
+            try {
+                console.log('📤 Enviando request...');
+                console.log('URL:', `${API_URL}/register/doctor`);
+                console.log('Archivo:', file);
+                
+                const response = await fetch(`${API_URL}/register/doctor`, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                console.log('📥 Response status:', response.status);
+                const data = await response.json();
+                console.log('📥 Response data:', data);
+                
+                if (response.ok) {
+                    resultDiv.className = 'result success';
+                    let html = '<h3>✅ Registro Exitoso!</h3>';
+                    html += `<p><strong>ID Usuario:</strong> ${data.user.id}</p>`;
+                    html += `<p><strong>Nombre:</strong> ${data.user.nombre}</p>`;
+                    html += `<p><strong>Email:</strong> ${data.user.email}</p>`;
+                    html += `<p><strong>Rol:</strong> ${data.user.rol}</p>`;
+                    
+                    // Información de la foto
+                    if (data.user.foto_perfil) {
+                        html += `<div style="background: #d4edda; padding: 15px; border-radius: 8px; margin: 15px 0;">`;
+                        html += `<h4 style="color: #28a745; margin-bottom: 10px;">✅ Foto Guardada Correctamente</h4>`;
+                        html += `<p><strong>Ruta:</strong> ${data.user.foto_perfil}</p>`;
+                        const imageUrl = 'http://localhost:8080/saludgoft/saludgo-backend/' + data.user.foto_perfil;
+                        html += `<p><strong>URL:</strong> ${imageUrl}</p>`;
+                        html += `<img src="${imageUrl}" alt="Foto de perfil" onerror="this.style.border='3px solid red'; this.alt='❌ Error al cargar imagen'">`;
+                        html += `</div>`;
+                    } else {
+                        html += `<div style="background: #fff3cd; padding: 15px; border-radius: 8px; margin: 15px 0;">`;
+                        html += `<h4 style="color: #856404; margin-bottom: 10px;">⚠️ Foto NO Guardada</h4>`;
+                        html += `<p>La foto de perfil NO se guardó en la base de datos.</p>`;
+                        html += `</div>`;
+                    }
+                    
+                    // Debug info
+                    if (data.upload_debug) {
+                        html += `<div class="debug-info">`;
+                        html += `<h4>🔍 Información de Debug:</h4>`;
+                        html += `<p><strong>¿$_FILES existe?:</strong> ${data.upload_debug.files_exists ? '✅ Sí' : '❌ No'}</p>`;
+                        html += `<p><strong>Content-Type:</strong> ${data.upload_debug.content_type || 'N/A'}</p>`;
+                        html += `<p><strong>Total archivos:</strong> ${data.upload_debug.files_count}</p>`;
+                        
+                        if (data.upload_debug.file_error !== undefined) {
+                            html += `<p><strong>Error Code:</strong> ${data.upload_debug.file_error}</p>`;
+                        }
+                        if (data.upload_debug.file_name) {
+                            html += `<p><strong>Nombre archivo:</strong> ${data.upload_debug.file_name}</p>`;
+                        }
+                        if (data.upload_debug.file_size) {
+                            html += `<p><strong>Tamaño:</strong> ${(data.upload_debug.file_size / 1024 / 1024).toFixed(2)} MB</p>`;
+                        }
+                        if (data.upload_debug.error_message) {
+                            html += `<p style="color: red;"><strong>❌ Error:</strong> ${data.upload_debug.error_message}</p>`;
+                        }
+                        if (data.upload_debug.upload_error) {
+                            html += `<p style="color: red;"><strong>❌ Error Upload:</strong> ${data.upload_debug.upload_error}</p>`;
+                        }
+                        html += `</div>`;
+                    }
+                    
+                    html += `<div class="debug-info">`;
+                    html += `<h4>📦 Respuesta Completa:</h4>`;
+                    html += `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+                    html += `</div>`;
+                    
+                    resultDiv.innerHTML = html;
+                } else {
+                    resultDiv.className = 'result error';
+                    resultDiv.innerHTML = `
+                        <h3>❌ Error en el Registro</h3>
+                        <p><strong>Error:</strong> ${data.error || 'Error desconocido'}</p>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.innerHTML = `
+                    <h3>❌ Error de Conexión</h3>
+                    <p>${error.message}</p>
+                    <p><strong>Verifica:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>Que el servidor esté corriendo</li>
+                        <li>Que la URL sea correcta: ${API_URL}</li>
+                        <li>Que CORS esté configurado</li>
+                    </ul>
+                `;
+                console.error('Error:', error);
+            }
+        });
+    </script>
+</body>
+</html>

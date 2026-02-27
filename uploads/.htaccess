@@ -1,0 +1,10 @@
+# Permitir acceso a las imágenes
+<IfModule mod_rewrite.c>
+    RewriteEngine Off
+</IfModule>
+
+# Permitir todos los archivos de imagen
+<FilesMatch "\.(jpg|jpeg|png|gif|webp)$">
+    Order Allow,Deny
+    Allow from all
+</FilesMatch>

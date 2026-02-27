@@ -18,19 +18,29 @@ class DoctorProfileRepository implements DoctorProfileRepositoryInterface
     public function save(DoctorProfile $profile): DoctorProfile
     {
         $sql = "INSERT INTO profesionales 
-                (usuario_id, especialidad_id, cedula, tarjeta_profesional, medio_transporte, `años_experiencia`, tarifa_consulta, descripcion, verificado, estado_verificacion, acepta_terminos, fecha_acepta_terminos) 
-                VALUES (:usuario_id, :especialidad_id, :cedula, :tarjeta_profesional, :medio_transporte, :anos_experiencia, :tarifa_consulta, :descripcion, :verificado, :estado_verificacion, :acepta_terminos, :fecha_acepta_terminos)";
+                (usuario_id, especialidad_id, cedula, tarjeta_profesional, medio_transporte, anos_experiencia, tarifa_consulta, descripcion, 
+                 foto_documento_identidad, foto_tarjeta_profesional, selfie_con_tarjeta, documento_adicional_1, documento_adicional_2, documento_adicional_3,
+                 verificado, estado_verificacion, acepta_terminos, fecha_acepta_terminos) 
+                VALUES (:usuario_id, :especialidad_id, :cedula, :tarjeta_profesional, :medio_transporte, :anos_experiencia, :tarifa_consulta, :descripcion,
+                        :foto_documento_identidad, :foto_tarjeta_profesional, :selfie_con_tarjeta, :documento_adicional_1, :documento_adicional_2, :documento_adicional_3,
+                        :verificado, :estado_verificacion, :acepta_terminos, :fecha_acepta_terminos)";
         
         $stmt = $this->db->prepare($sql);
         $stmt->execute([
             ':usuario_id' => $profile->getUsuarioId(),
             ':especialidad_id' => $profile->getEspecialidadId(),
-            ':cedula' => $profile->getCedula() ?? '', // cedula es NOT NULL, usar string vacío si no viene
+            ':cedula' => $profile->getCedula() ?? '', 
             ':tarjeta_profesional' => $profile->getTarjetaProfesional(),
             ':medio_transporte' => $profile->getMedioTransporte(),
             ':anos_experiencia' => $profile->getAnosExperiencia(),
             ':tarifa_consulta' => $profile->getTarifaConsulta(),
             ':descripcion' => $profile->getDescripcion(),
+            ':foto_documento_identidad' => $profile->getFotoDocumentoIdentidad(),
+            ':foto_tarjeta_profesional' => $profile->getFotoTarjetaProfesional(),
+            ':selfie_con_tarjeta' => $profile->getSelfieConTarjeta(),
+            ':documento_adicional_1' => $profile->getDocumentoAdicional1(),
+            ':documento_adicional_2' => $profile->getDocumentoAdicional2(),
+            ':documento_adicional_3' => $profile->getDocumentoAdicional3(),
             ':verificado' => $profile->getVerificado(),
             ':estado_verificacion' => $profile->getEstadoVerificacion(),
             ':acepta_terminos' => $profile->getAceptaTerminos(),
@@ -72,9 +82,15 @@ class DoctorProfileRepository implements DoctorProfileRepositoryInterface
                 cedula = :cedula,
                 tarjeta_profesional = :tarjeta_profesional,
                 medio_transporte = :medio_transporte,
-                `años_experiencia` = :anos_experiencia,
+                anos_experiencia = :anos_experiencia,
                 tarifa_consulta = :tarifa_consulta,
                 descripcion = :descripcion,
+                foto_documento_identidad = :foto_documento_identidad,
+                foto_tarjeta_profesional = :foto_tarjeta_profesional,
+                selfie_con_tarjeta = :selfie_con_tarjeta,
+                documento_adicional_1 = :documento_adicional_1,
+                documento_adicional_2 = :documento_adicional_2,
+                documento_adicional_3 = :documento_adicional_3,
                 verificado = :verificado,
                 estado_verificacion = :estado_verificacion,
                 fecha_verificacion = :fecha_verificacion,
@@ -89,14 +105,20 @@ class DoctorProfileRepository implements DoctorProfileRepositoryInterface
             ':cedula' => $profile->getCedula(),
             ':tarjeta_profesional' => $profile->getTarjetaProfesional(),
             ':medio_transporte' => $profile->getMedioTransporte(),
-            ':años_experiencia' => $profile->getAnosExperiencia(),
+            ':anos_experiencia' => $profile->getAnosExperiencia(),
             ':tarifa_consulta' => $profile->getTarifaConsulta(),
             ':descripcion' => $profile->getDescripcion(),
+            ':foto_documento_identidad' => $profile->getFotoDocumentoIdentidad(),
+            ':foto_tarjeta_profesional' => $profile->getFotoTarjetaProfesional(),
+            ':selfie_con_tarjeta' => $profile->getSelfieConTarjeta(),
+            ':documento_adicional_1' => $profile->getDocumentoAdicional1(),
+            ':documento_adicional_2' => $profile->getDocumentoAdicional2(),
+            ':documento_adicional_3' => $profile->getDocumentoAdicional3(),
             ':verificado' => $profile->getVerificado(),
             ':estado_verificacion' => $profile->getEstadoVerificacion(),
             ':fecha_verificacion' => $profile->getFechaVerificacion()?->format('Y-m-d H:i:s'),
             ':notas_verificacion' => $profile->getNotasVerificacion(),
-            ':verificado_por' => null, // TODO: agregar cuando tengamos el método
+            ':verificado_por' => null,
         ]);
     }
 

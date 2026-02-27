@@ -17,18 +17,26 @@ Infrastructure\Middleware\CorsMiddleware::handle();
 
 // Servir archivos estáticos de uploads
 $requestUri = $_SERVER['REQUEST_URI'];
-if (strpos($requestUri, '/uploads/') === 0) {
-    $filePath = __DIR__ . '/..' . parse_url($requestUri, PHP_URL_PATH);
-    if (file_exists($filePath) && is_file($filePath)) {
-        $mimeType = mime_content_type($filePath);
-        header('Content-Type: ' . $mimeType);
-        header('Content-Length: ' . filesize($filePath));
-        readfile($filePath);
-        exit;
-    } else {
-        http_response_code(404);
-        echo json_encode(['error' => 'Archivo no encontrado']);
-        exit;
+if (strpos($requestUri, '/uploads/') !== false) {
+    // Extraer la parte después de 'public'
+    $path = parse_url($requestUri, PHP_URL_PATH);
+    
+    // Si la ruta contiene 'public/uploads', remover todo antes de 'uploads'
+    if (preg_match('#/uploads/.*$#', $path, $matches)) {
+        $uploadPath = $matches[0];  // /uploads/profiles/...
+        $filePath = __DIR__ . '/..' . $uploadPath;
+        
+        if (file_exists($filePath) && is_file($filePath)) {
+            $mimeType = mime_content_type($filePath);
+            header('Content-Type: ' . $mimeType);
+            header('Content-Length: ' . filesize($filePath));
+            readfile($filePath);
+            exit;
+        } else {
+            http_response_code(404);
+            echo json_encode(['error' => 'Archivo no encontrado: ' . $filePath]);
+            exit;
+        }
     }
 }
 

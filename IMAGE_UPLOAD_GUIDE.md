@@ -28,7 +28,7 @@ Se ha implementado completamente el sistema de manejo de imágenes para fotos de
 
 ```bash
 # Desde Postman o similar
-POST http://localhost:8000/api/register/patient
+POST http://localhost:8080/api/register/patient
 Content-Type: multipart/form-data
 
 Campos:
@@ -42,7 +42,7 @@ Campos:
 **Ahora acepta multipart/form-data con imagen**
 
 ```bash
-POST http://localhost:8000/api/register/doctor
+POST http://localhost:8080/api/register/doctor
 Content-Type: multipart/form-data
 
 Campos:
@@ -63,7 +63,7 @@ Campos:
 **Actualizar foto de perfil (requiere autenticación)**
 
 ```bash
-POST http://localhost:8000/api/me/photo
+POST http://localhost:8080/api/me/photo
 Authorization: Bearer {token}
 Content-Type: multipart/form-data
 
@@ -77,7 +77,7 @@ Campos:
   "success": true,
   "message": "Foto de perfil actualizada",
   "foto_perfil": "uploads/profiles/img_abc123_1234567890.jpg",
-  "foto_url": "http://localhost:8000/uploads/profiles/img_abc123_1234567890.jpg"
+  "foto_url": "http://localhost:8080/uploads/profiles/img_abc123_1234567890.jpg"
 }
 ```
 
@@ -99,7 +99,7 @@ Future<Map<String, dynamic>> registerDoctorWithPhoto({
 }) async {
   var request = http.MultipartRequest(
     'POST',
-    Uri.parse('http://localhost:8000/api/register/doctor'),
+    Uri.parse('http://localhost:8080/api/register/doctor'),
   );
 
   // Campos de texto
@@ -142,7 +142,7 @@ Future<Map<String, dynamic>> registerDoctorWithPhoto({
 Future<Map<String, dynamic>> updateProfilePhoto(File image, String token) async {
   var request = http.MultipartRequest(
     'POST',
-    Uri.parse('http://localhost:8000/api/me/photo'),
+    Uri.parse('http://localhost:8080/api/me/photo'),
   );
 
   // Agregar token de autorización
@@ -213,7 +213,7 @@ En `config/app.php` puedes configurar:
 
 ```php
 return [
-    'url' => env('APP_URL', 'http://localhost:8000'),
+    'url' => env('APP_URL', 'http://localhost:8080'),
     // ...
 ];
 ```
@@ -221,14 +221,16 @@ return [
 ### Servidor de Desarrollo PHP
 ```bash
 cd public
-php -S localhost:8000
+php -S localhost:8080
 ```
 
 ### XAMPP
 Las imágenes se sirven automáticamente desde:
 ```
-http://localhost/saludgo-backend/uploads/profiles/imagen.jpg
+http://localhost:8080/saludgoft/saludgo-backend/uploads/profiles/imagen.jpg
 ```
+
+**Nota:** NO incluyas `/public/` en la URL, la carpeta uploads está en la raíz del proyecto.
 
 ## 📝 Notas Importantes
 
@@ -243,7 +245,8 @@ http://localhost/saludgo-backend/uploads/profiles/imagen.jpg
 
 3. **Respuestas del API**
    - Al registrarse o actualizar foto, recibes la ruta: `"foto_perfil": "uploads/profiles/..."`
-   - Para mostrar la imagen, usa: `http://localhost:8000/uploads/profiles/...`
+   - Para mostrar la imagen, usa: `http://localhost:8080/saludgoft/saludgo-backend/uploads/profiles/...`
+   - **NO uses** `/public/` en la URL: la carpeta uploads está en la raíz
 
 4. **Manejo de errores**
    - Imagen muy grande: "La imagen es demasiado grande. Máximo 5MB"
@@ -256,7 +259,7 @@ http://localhost/saludgo-backend/uploads/profiles/imagen.jpg
 
 ```bash
 # Registrar doctor con foto
-curl -X POST http://localhost:8000/api/register/doctor \
+curl -X POST http://localhost:8080/api/register/doctor \
   -F "nombre=Dr. Test" \
   -F "email=test@test.com" \
   -F "password=123456" \
@@ -264,7 +267,7 @@ curl -X POST http://localhost:8000/api/register/doctor \
   -F "foto_perfil=@/ruta/a/imagen.jpg"
 
 # Actualizar foto de perfil
-curl -X POST http://localhost:8000/api/me/photo \
+curl -X POST http://localhost:8080/api/me/photo \
   -H "Authorization: Bearer {tu_token}" \
   -F "foto_perfil=@/ruta/a/nueva_imagen.jpg"
 ```

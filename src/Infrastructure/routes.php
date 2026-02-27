@@ -55,6 +55,12 @@ $router->post('/me/photo', function($userData) {
     $controller->updateProfilePhoto($userData);
 }, true);
 
+// Actualizar perfil (nombre, email, ciudad, etc.)
+$router->put('/me', function($userData) {
+    $controller = new AuthController();
+    $controller->updateProfile($userData);
+}, true);
+
 // ========================================
 // RUTAS DE PACIENTE
 // ========================================
